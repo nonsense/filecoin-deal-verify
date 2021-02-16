@@ -1,4 +1,4 @@
-# Filecoin Oracle on Ethereum
+# Filecoin Oracle on Ethereum - `verify-proof`
 
 This is a tool to verify merkle inclusion proofs produced by the Filecoin oracle trusted web service versus the latest uploaded merkle root hash on Ethereum.
 
