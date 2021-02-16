@@ -7,9 +7,9 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/dirkmc/filecoin-deal-proofs-svc/bindings/oracle"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/nonsense/filecoin-deal-verify/bindings/oracle"
 
 	logging "github.com/ipfs/go-log/v2"
 )
@@ -17,10 +17,8 @@ import (
 var log = logging.Logger("verify-proof")
 
 var (
-	OurAddress = common.HexToAddress("0x3b8Fd7cE0f4841F1C23B67b20676886ac230Be64")
-
-	endpoint = "https://rinkeby.infura.io/v3/7e1eddb52ae149eaaa92941def0fd49d"
-	contract = common.HexToAddress("0xd4375467f6CfB0493b5e4AF0601B3a0f2e7D2FcA")
+	endpoint string
+	contract string
 
 	dealID      int
 	dataCID     string
@@ -41,6 +39,9 @@ func init() {
 	flag.IntVar(&endEpoch, "endEpoch", 0, "")
 	flag.IntVar(&signedEpoch, "signedEpoch", 0, "")
 	flag.StringVar(&proof, "proof", "", "")
+
+	flag.StringVar(&endpoint, "endpoint", "https://rinkeby.infura.io/v3/xxx", "endpoint to an ethereum node")
+	flag.StringVar(&contract, "contract", "0xd4375467f6CfB0493b5e4AF0601B3a0f2e7D2FcA", "contract to query and make `VerifyProof` call to")
 }
 
 type Deal struct {
@@ -64,7 +65,7 @@ func main() {
 	}
 	ethClient := ethclient.NewClient(client)
 
-	fs, err := oracle.NewFilecoinService(contract, ethClient)
+	fs, err := oracle.NewFilecoinService(common.HexToAddress(contract), ethClient)
 	if err != nil {
 		panic(err)
 	}
